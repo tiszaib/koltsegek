@@ -7,5 +7,7 @@ const KATEGORIAK = [
   { nev: 'Szórakozás', ikon: '🎉' },
   { nev: 'Közlekedés', ikon: '🚌' },
   { nev: 'Számlák',    ikon: '🧾' },
+  { nev: 'Lakhatás',   ikon: '🏠' },
+  { nev: 'Ivás',       ikon: '🍺' },
   { nev: 'Egyéb',      ikon: '📦' },
 ];
