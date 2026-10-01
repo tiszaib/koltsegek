@@ -1,5 +1,6 @@
 const SOR_KULCS = 'koltsegek.sor';       // még el nem küldött tételek
 const ELOZMENY_KULCS = 'koltsegek.elozmeny'; // utolsó tételek a listához
+const CIM_KULCS = 'koltsegek.cim';           // a saját Google szkript címe
 
 const $ = (id) => document.getElementById(id);
 const osszegMezo = $('osszeg');
@@ -15,6 +16,11 @@ function ir(kulcs, ertek) {
 }
 
 const ft = new Intl.NumberFormat('hu-HU');
+
+function cimOlvas() {
+  try { return localStorage.getItem(CIM_KULCS) || ''; } catch { return ''; }
+}
+let scriptCim = cimOlvas();
 
 // Kategória gombok
 function kategoriakRajzol() {
@@ -71,14 +77,14 @@ function listaRajzol() {
 
 let kuldesFolyamatban = false;
 async function sorKuldes() {
-  if (kuldesFolyamatban || !SCRIPT_URL) return;
+  if (kuldesFolyamatban || !scriptCim) return;
   kuldesFolyamatban = true;
   try {
     let sor = olvas(SOR_KULCS);
     while (sor.length) {
       const tetel = sor[0];
       // text/plain: így nem kell CORS előzetes kérés az Apps Script felé
-      const valasz = await fetch(SCRIPT_URL, {
+      const valasz = await fetch(scriptCim, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(tetel),
@@ -120,7 +126,7 @@ $('urlap').addEventListener('submit', async (e) => {
   kategoriakRajzol();
   listaRajzol();
 
-  if (!SCRIPT_URL) {
+  if (!scriptCim) {
     uzen('Elmentve a telefonon. A táblázat még nincs összekötve.', 'figyelem');
     return;
   }
@@ -143,7 +149,48 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
+// Beállító képernyő: itt adja meg mindenki a saját táblázatának címét.
+const CIM_MINTA = /^https:\/\/script\.google\.com\/(a\/[^/]+\/)?macros\/s\/[\w-]+\/exec$/;
+
+function beallitasMutat(mutat) {
+  $('beallitas').hidden = !mutat;
+  $('fooldal').hidden = mutat;
+  $('megse').hidden = !scriptCim;
+  $('beallitasUzenet').textContent = '';
+  if (mutat) $('cim').value = scriptCim;
+  else osszegMezo.focus();
+}
+
+$('beallitasGomb').addEventListener('click', () => beallitasMutat($('beallitas').hidden));
+$('megse').addEventListener('click', () => beallitasMutat(false));
+
+$('beallitasUrlap').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const uz = $('beallitasUzenet');
+  const cim = $('cim').value.trim().split('?')[0];
+  if (!CIM_MINTA.test(cim)) {
+    uz.textContent = 'Ez nem jó cím. https://script.google.com/macros/s/ kezdetű és /exec végű címet keresünk.';
+    uz.className = 'uzenet hiba';
+    return;
+  }
+  uz.textContent = 'Ellenőrzöm…';
+  uz.className = 'uzenet';
+  let ellenorizve = false;
+  try {
+    const adat = await (await fetch(cim)).json();
+    if (!adat.ok) throw new Error('nem ok');
+    ellenorizve = true;
+  } catch {
+    // Ha nem sikerül ellenőrizni (pl. nincs net), a címet akkor is elmentjük.
+  }
+  try { localStorage.setItem(CIM_KULCS, cim); } catch {}
+  scriptCim = cim;
+  beallitasMutat(false);
+  uzen(ellenorizve ? 'Összekötve a táblázattal ✓' : 'Elmentettem a címet, de most nem tudtam ellenőrizni. Ments egy tételt, és nézd meg a táblázatban.', ellenorizve ? 'ok' : 'figyelem');
+  sorKuldes().then(listaRajzol);
+});
+
 kategoriakRajzol();
 listaRajzol();
 halozatJelzo();
-osszegMezo.focus();
+beallitasMutat(!scriptCim);

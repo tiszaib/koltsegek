@@ -1,6 +1,6 @@
 // Offline működéshez: az app fájljait a telefon eltárolja.
 // Hálózat elsőként, hogy a frissítések azonnal megjelenjenek.
-const CACHE = 'koltsegek-v1';
+const CACHE = 'koltsegek-v2';
 const FAJLOK = ['./', 'index.html', 'style.css', 'config.js', 'app.js', 'manifest.webmanifest', 'icon-192.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

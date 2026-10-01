@@ -87,3 +87,23 @@ form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .lista .jobb { display: flex; align-items: center; gap: 8px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .lista .allapot { width: 1.2em; text-align: center; color: var(--fo); }
 .lista .ures { color: var(--halvany); justify-content: center; }
+
+.fejlec-jobb { display: flex; align-items: center; gap: 8px; }
+.ikon-gomb {
+  width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--keret);
+  background: var(--kartya); color: var(--halvany); font-size: 1.2rem; cursor: pointer;
+}
+.beallitas { background: var(--kartya); border: 1px solid var(--keret); border-radius: 16px; padding: 16px; }
+.beallitas .beallitas-cim { color: var(--szoveg); font-size: 1.1rem; margin: 0 0 8px; }
+.beallitas p { margin: 0 0 12px; line-height: 1.45; }
+.beallitas code { font-size: .9em; }
+.beallitas .uzenet { margin-top: 8px; }
+#cim {
+  width: 100%; font-size: 1rem; padding: 14px 16px; border-radius: 12px;
+  border: 1px solid var(--keret); background: var(--hatter); color: var(--szoveg); outline: none;
+}
+#cim:focus { border-color: var(--fo); }
+#beallitasUrlap button { padding: 14px; font-size: 1.05rem; font-weight: 700; border-radius: 12px; border: 0; background: var(--fo); color: var(--fo-szoveg); cursor: pointer; }
+#beallitasUrlap .masodlagos { background: transparent; color: var(--halvany); border: 1px solid var(--keret); font-weight: 600; }
+#beallitasUrlap { margin-bottom: 4px; }
+.halvany { color: var(--halvany); font-size: .9rem; }

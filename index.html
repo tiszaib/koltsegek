@@ -18,8 +18,25 @@
 <main>
   <header>
     <h1>Költségeim</h1>
-    <span id="halozat" class="jelzo" hidden>offline</span>
+    <div class="fejlec-jobb">
+      <span id="halozat" class="jelzo" hidden>offline</span>
+      <button id="beallitasGomb" class="ikon-gomb" type="button" aria-label="Beállítások" title="Beállítások">⚙︎</button>
+    </div>
   </header>
+
+  <section id="beallitas" class="beallitas" hidden>
+    <h2 class="beallitas-cim">Melyik táblázatba mentsek?</h2>
+    <p>Illeszd be a saját Google Táblázatod szkriptjének címét. Ezt a telepítéskor kaptad, és <code>/exec</code>-re végződik.</p>
+    <form id="beallitasUrlap" autocomplete="off">
+      <input id="cim" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec" aria-label="A szkript címe" required>
+      <button id="cimMentes" type="submit">Összekötés</button>
+      <button id="megse" type="button" class="masodlagos" hidden>Mégse</button>
+    </form>
+    <p id="beallitasUzenet" class="uzenet" role="status" aria-live="polite"></p>
+    <p class="halvany">Még nincs saját táblázatod? Kérd el az útmutatót attól, akitől az appot kaptad.</p>
+  </section>
+
+  <div id="fooldal">
 
   <form id="urlap" autocomplete="off">
     <label class="osszeg-mezo">
@@ -40,6 +57,7 @@
     <h2>Legutóbbiak</h2>
     <ul id="lista" class="lista"></ul>
   </section>
+  </div>
 </main>
 <script src="config.js"></script>
 <script src="app.js"></script>
