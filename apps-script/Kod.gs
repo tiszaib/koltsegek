@@ -79,11 +79,9 @@ function osszesito_(ss) {
   const v = elvalaszto_(ossz);
 
   ossz.getRange('A1').setValue('Hónap:').setFontWeight('bold');
+  // B1: mindig az aktuális hónap (kézzel átírható egy dátumra).
   const honap = ossz.getRange('B1');
-  // Ha valaki kézzel beírt egy dátumot, azt meghagyjuk.
-  if (honap.getFormula() || !(honap.getValue() instanceof Date)) {
-    honap.setFormula(`=DATE(YEAR(TODAY())${v}MONTH(TODAY())${v}1)`);
-  }
+  honap.setFormula(`=DATE(YEAR(TODAY())${v}MONTH(TODAY())${v}1)`);
   honap.setNumberFormat('yyyy. mmmm').setFontWeight('bold');
   ossz.getRange('C1').setValue('← másik hónaphoz írj ide egy dátumot, pl. 2026.09.01').setFontColor('#6b7280');
   ossz.getRange('A2').setValue('Összesen:').setFontWeight('bold');
